@@ -3,7 +3,7 @@ import chess.pgn
 import io
 import pandas as pd 
 import numpy as np
-from concept_labelling.stockfish_utils import get_stockfish_eval, new_game_context
+from stockfish_annotator.stockfish_utils import get_stockfish_eval, new_game_context
 
 
 def get_game_states(pgn_string: str, return_fen=False) -> list[chess.Board | str]:

@@ -3,7 +3,7 @@ import pandas as pd
 from tqdm import tqdm
 import argparse
 import multiprocessing 
-from concept_labelling.game_label import eval_game_moves 
+from stockfish_annotator.game_label import eval_game_moves 
 
 
 parser = argparse.ArgumentParser(description='Annotate dataset with Stockfish')

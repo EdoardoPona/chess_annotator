@@ -1,2 +1,6 @@
 datasets
+tqdm
+pandas
+numpy
 zstandard
+python-chess
