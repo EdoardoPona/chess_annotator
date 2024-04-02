@@ -19,18 +19,38 @@ parser.add_argument(
     default='transcript',
     help='Name of the column in the dataframe containing the PGN strings'
 )
+parser.add_argument(
+    '--num_cores',
+    type=int,
+    default=multiprocessing.cpu_count(),
+    help='Number of cores to use for multiprocessing'
+)
+parser.add_argument(
+    '--batch_size',
+    type=int,
+    default=10000,
+    help='Number of games to process in a single batch'
+
+)
+parser.add_argument(
+    '--output_path',
+    type=str,
+    default=None,
+    help='Path to save the annotated dataset'
+)
 
 
 if __name__=='__main__':
     args = parser.parse_args()
     df = pd.read_csv(args.dataset_path)
     pgn_column = args.pgn_column
-
-    num_cores = multiprocessing.cpu_count()
-    batch_size = 10000
+    num_cores = args.num_cores 
+    batch_size = args.batch_size 
 
     i = 0
     batch_df = df[i*batch_size:(i+1)*batch_size]
+
+    save_path = args.output_path if args.output_path is not None else args.dataset_path.replace('.csv', '_annotated_{batch}.pkl')
     for i in range(df.shape[0]//batch_size):
         print(f"Processing batch {i} of {df.shape[0]//batch_size}")
         batch_df = df[i*batch_size:(i+1)*batch_size]
@@ -40,14 +60,11 @@ if __name__=='__main__':
             keys=batch_df.index, 
             names=['game', 'move']
         )
-        game_evals.to_pickle(f"{os.environ['DATA_PATH']}/chess/lichess_100mb_annotated_{i}.pkl")
+        game_evals.to_pickle(save_path.format(batch=i))
         # Close the multiprocessing pool
         pool.close()
         pool.join()
 
     # save the df to pickle, making sure the multi-index is preserved
     # make also sure the column multi-index is preserved
-
-    game_evals.to_pickle(f"{os.environ['DATA_PATH']}/chess/lichess_100mb_annotated.pkl")
-
 
