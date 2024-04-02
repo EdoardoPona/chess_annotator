@@ -6,7 +6,7 @@ from contextlib import contextmanager
 STOCKFISH_PATH = os.environ.get('STOCKFISH_PATH')
 
 
-def get(process):
+def get(process) -> str:
     ''' Function to read lines from Stockfish's output '''
     return process.stdout.readline().strip()
 
@@ -14,8 +14,7 @@ def get(process):
 def get_multiline(
         process, 
         n_lines: int = None,
-        discard=False
-    ):
+    ) -> list[str]:
     ''' gets print from a multiline output '''
     out = []
     done = False
@@ -30,13 +29,13 @@ def get_multiline(
     return out 
 
 
-def display_board(process):
+def display_board(process) -> list[str]:
     put(process, "d")
     display_out = get_multiline(process, n_lines=19)
     return display_out
 
 
-def put(process, command):
+def put(process, command) -> None:
     ''' Function to send commands to Stockfish '''
     process.stdin.write(command + '\n')
     process.stdin.flush()
@@ -74,7 +73,7 @@ def close_game_process(process: subprocess.Popen) -> None:
     process.communicate()
 
 
-def get_stockfish_eval(fen: str | None = None, process: subprocess.Popen | None = None):
+def get_stockfish_eval(fen: str | None = None, process: subprocess.Popen | None = None) -> list[str]:
     if fen is None and process is None:
         raise ValueError("Must provide either a FEN string or a process object")
 

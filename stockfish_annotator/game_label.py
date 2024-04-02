@@ -20,7 +20,7 @@ def get_game_states(pgn_string: str, return_fen=False) -> list[chess.Board | str
     return board_states
 
 
-def eval_game_moves(pgn: str):
+def eval_game_moves(pgn: str) -> pd.DataFrame:
     ''' given the pgn string of a game, return the state evaluation for each move '''
     states = get_game_states(pgn, return_fen=True)
     with new_game_context() as game_process:
