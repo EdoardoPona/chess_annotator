@@ -42,6 +42,7 @@ def put(process, command) -> None:
 
 
 def new_game(fen: str = None) -> subprocess.Popen:
+    assert STOCKFISH_PATH is not None, "Stockfish path not set"
     process = subprocess.Popen(
         STOCKFISH_PATH, 
         universal_newlines=True, 
