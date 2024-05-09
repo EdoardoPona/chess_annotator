@@ -3,9 +3,10 @@ import chess.pgn
 import io
 import pandas as pd 
 import numpy as np
-from stockfish_annotator.stockfish_utils import get_stockfish_eval, new_game_context
+from chess_annotator.stockfish_utils import get_stockfish_eval, new_game_context
 
 
+# TODO can this be used by the binary concept eval as well? 
 def get_game_states(pgn_string: str, return_fen=False) -> list[chess.Board | str]:
     ''' given a pgn string, return a list of game states (possibly in fen notation)'''
     game = chess.pgn.read_game(io.StringIO(pgn_string))
@@ -20,7 +21,7 @@ def get_game_states(pgn_string: str, return_fen=False) -> list[chess.Board | str
     return board_states
 
 
-def eval_game_moves(pgn: str) -> pd.DataFrame:
+def eval_game_moves_continuous(pgn: str) -> pd.DataFrame:
     ''' given the pgn string of a game, return the state evaluation for each move '''
     states = get_game_states(pgn, return_fen=True)
     with new_game_context() as game_process:

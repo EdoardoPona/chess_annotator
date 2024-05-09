@@ -4,7 +4,7 @@ with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
 setup(
-    name='stockfish_annotator',
+    name='chess_annotator',
     version='1.0',
     packages=find_packages(),
     install_requires=requirements,
