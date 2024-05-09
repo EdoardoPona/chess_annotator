@@ -75,6 +75,7 @@ if __name__=='__main__':
             names=['game', 'move']
         )
 
+        # TODO add the state pgn to the dataframes 
         # make the save directory if it doesn't already exist 
         batch_save_path = save_path.format(concept_type=concept_type, batch=i)
         os.makedirs(os.path.dirname(batch_save_path), exist_ok=True)
