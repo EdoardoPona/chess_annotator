@@ -35,13 +35,19 @@ def eval_game_moves_continuous(pgn: str) -> pd.DataFrame:
     return game_evals
 
 
-def parse_eval(eval: list[str], return_dataframe: bool=True) -> pd.DataFrame | dict:
+
+def parse_eval(
+        eval: list[str], 
+        return_dataframe: bool=True,
+        return_white_total = False    # TODO document this dynamic better
+    ) -> pd.DataFrame | dict:
     ''' 
     given a list of strings representing stdout from stockfish eval on a single position, 
     returns a dictionary, or a dataframe the dataframe is indexed by a multi-index, 
     with concept_name, player, game_phase  
     '''
     parsed_out = {}
+    white_total_score = None
     for line in eval[3:]:  # the first 3 are headers 
         try:
             concept, white, black, total = line.split('|')
@@ -62,7 +68,10 @@ def parse_eval(eval: list[str], return_dataframe: bool=True) -> pd.DataFrame | d
                 }
             parsed_out[concept] = concept_data
         except Exception as e:
-            pass
+            if 'Total evaluation' in line and return_white_total:
+                white_total_score = float(line.split(':')[1].strip().split(' ')[0])
+            else:
+                pass
 
     if return_dataframe:
         parsed_out = pd.concat(
@@ -74,7 +83,12 @@ def parse_eval(eval: list[str], return_dataframe: bool=True) -> pd.DataFrame | d
         )
         parsed_out.columns.names = ['concept_name', 'player', 'game_phase']
 
+    # this should work both when parsed_out is a dictionary, and when it is a dataframe
+    if return_white_total:
+        parsed_out['total_white_score'] = white_total_score
+
     return parsed_out
+
 
 
         
